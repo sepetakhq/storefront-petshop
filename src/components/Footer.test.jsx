@@ -48,6 +48,30 @@ describe('Footer', () => {
     expect(screen.getByRole('link', { name: 'TikTok' }).getAttribute('href')).toBe('https://tiktok.com/@a');
   });
 
+  it("draws the server's badge in place of a name, once per badge, and keeps names it has none for", () => {
+    const bca = 'http://api.test/logos/payment/bca.svg';
+    const jne = 'http://api.test/logos/courier/jne.svg';
+    const { container } = setup({}, {
+      payments: [
+        { code: 'BCA', name: 'VA BCA', enabled: true, logo_url: bca },
+        { code: 'MANUAL_BCA', name: 'Transfer BCA', enabled: true, logo_url: bca },
+        { code: 'MANUAL_BANK_1', name: 'Transfer SeaBank', enabled: true },
+      ],
+      couriers: [
+        { code: 'toko', name: 'Kurir Toko', enabled: true },
+        { code: 'jne', name: 'JNE REG', enabled: true, logo_url: jne },
+        { code: 'jne', name: 'JNE YES', enabled: true, logo_url: jne },
+      ],
+    });
+    const imgs = [...container.querySelectorAll('.ps-logo-chip img')];
+    expect(imgs.map((i) => i.getAttribute('src'))).toEqual([bca, jne]);
+    // The first name behind a badge is how it is read aloud.
+    expect(screen.getByRole('img', { name: 'VA BCA' })).toBeTruthy();
+    expect(screen.queryByRole('img', { name: 'Transfer BCA' })).toBeNull();
+    expect(screen.getByText('Transfer SeaBank')).toBeTruthy();
+    expect(screen.getByText('Kurir Toko')).toBeTruthy();
+  });
+
   it("adds the shop's free-shipping line under the couriers, and none while the offer is off", () => {
     Object.assign(config, { freeShipping: true, copy: (s) => String(s).replaceAll('{free_shipping_min}', 'Rp 500.000') });
     const { container } = setup({ sections: { hero_chip_shipping: 'Gratis ongkir', hero_chip_shipping_note: 'min. {free_shipping_min}' } });

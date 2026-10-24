@@ -11,7 +11,7 @@ import { deviceRows, tokensOf } from '@sepetakhq/storefront-kit/lib/deviceOrders
 import { useOrdersByToken } from '@sepetakhq/storefront-kit/hooks/queries';
 import { recordRetryAfter, recordSend, cooldown } from '@sepetakhq/storefront-kit/checkout/otpCooldown';
 import { CountdownWords } from '../ui/Countdown.jsx';
-import { fmt, fmtDateTime } from '@sepetakhq/storefront-kit/shared/format';
+import { fmt, fmtDateTime, formatQty } from '@sepetakhq/storefront-kit/shared/format';
 
 const card = { background: 'var(--ps-white)', border: '1px solid var(--ps-line)', borderRadius: 22, padding: 'clamp(18px, 3vw, 26px)' };
 const field = {
@@ -315,7 +315,7 @@ function LookupResults({ orders }) {
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, fontSize: 14 }}>
                 <span style={{ minWidth: 0 }}>
                   {l.name}
-                  {l.variant_label ? ` · ${l.variant_label}` : ''} <span style={{ color: 'var(--ps-muted)' }}>× {l.qty}</span>
+                  {l.variant_label ? ` · ${l.variant_label}` : ''} <span style={{ color: 'var(--ps-muted)' }}>× {formatQty(l.qty, l.unit)}</span>
                 </span>
                 <span style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{fmt(l.line_total)}</span>
               </div>

@@ -16,7 +16,7 @@ import { useConfig } from '@sepetakhq/storefront-kit/config/ConfigProvider';
 import { createDraft, sendCheckoutCode, verifyCheckoutCode } from '@sepetakhq/storefront-kit/api/endpoints';
 import { qk } from '@sepetakhq/storefront-kit/api/queryKeys';
 import { lineKey } from '@sepetakhq/storefront-kit/lib/variants';
-import { fmt } from '@sepetakhq/storefront-kit/shared/format';
+import { fmt, formatQty } from '@sepetakhq/storefront-kit/shared/format';
 import { confirmStep, estimatePaymentFee, estimateShipping, methodFits, storeNotReady } from '@sepetakhq/storefront-kit/lib/checkout';
 import {
   CHANNEL_WHATSAPP,
@@ -606,7 +606,7 @@ function Checkout({ onPlaced }) {
                   <div style={{ flex: 1, minWidth: 0, fontSize: 13.5 }}>
                     <div style={{ fontWeight: 600, color: 'var(--ps-heading)' }}>{l.product.name}</div>
                     <div style={{ color: 'var(--ps-muted)', fontSize: 13 }}>
-                      {l.item.qty} × {fmt(l.product.price)}
+                      {formatQty(l.item.qty, l.limits?.unit)} × {fmt(l.product.price)}
                       {l.label ? ` · ${l.label}` : ''}
                     </div>
                   </div>
@@ -757,7 +757,7 @@ function Review({
                 ) : null}
                 <div style={{ color: 'var(--ps-body)', fontSize: 13 }}>
                   {struckPrice(l) > 0 && <s className="ps-line-was">{fmt(struckPrice(l))}</s>}
-                  {fmt(l.unit_price)} × {l.qty}
+                  {fmt(l.unit_price)} × {formatQty(l.qty, l.unit)}
                   {l.promotion_name ? (
                     <span style={{ color: 'var(--ps-primary)' }}> · {l.promotion_name}</span>
                   ) : null}

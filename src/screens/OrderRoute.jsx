@@ -11,7 +11,7 @@ import { useConfig } from '@sepetakhq/storefront-kit/config/ConfigProvider';
 import { Tile } from '../components/Tile.jsx';
 import { courierName, struckPrice } from '../lib/copy.js';
 import { serverNow } from '@sepetakhq/storefront-kit/api/client';
-import { fmt, fmtDate, fmtDateTime } from '@sepetakhq/storefront-kit/shared/format';
+import { fmt, fmtDate, fmtDateTime, formatQty } from '@sepetakhq/storefront-kit/shared/format';
 import { claimPayment, reopenPayment } from '@sepetakhq/storefront-kit/api/endpoints';
 import { qk } from '@sepetakhq/storefront-kit/api/queryKeys';
 import {
@@ -191,7 +191,7 @@ export default function OrderRoute() {
                 ) : null}
                 <div style={{ color: 'var(--ps-body)', fontSize: 13 }}>
                   {struckPrice(l) > 0 && <s className="ps-line-was">{fmt(struckPrice(l))}</s>}
-                  {fmt(l.unit_price)} × {l.qty}
+                  {fmt(l.unit_price)} × {formatQty(l.qty, l.unit)}
                 </div>
               </div>
               <strong style={{ fontSize: 14 }}>{fmt(l.line_total)}</strong>

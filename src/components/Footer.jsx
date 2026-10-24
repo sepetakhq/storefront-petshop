@@ -15,7 +15,10 @@ import { footerLinks, heroChips, sectionText, socialLabel } from '../lib/copy.js
  * footer rather than headings over nothing.
  */
 export default function Footer() {
-  const { brand, paymentMethods, couriers, copy, freeShipping } = useConfig();
+  const { brand, paymentMethods, couriers, copy, freeShipping, tenant } = useConfig();
+  // The platform's mark, on the plans that carry it. Absent on an older API
+  // version, which strips the field, so nothing is drawn.
+  const badge = tenant?.sepetak_badge === true;
   // The design's free-shipping line under the couriers: the hero's shipping
   // chip in the merchant's words, so it never promises an offer that is off.
   const shipChip = heroChips(brand.sections, copy, freeShipping).find((c) => c.key === 'shipping');
@@ -126,9 +129,16 @@ export default function Footer() {
         )}
       </div>
 
-      {brand.copyright && (
+      {(brand.copyright || badge) && (
         <div className="ps-footer-bottom">
-          <div>{brand.copyright}</div>
+          <div>
+            {brand.copyright && <span>{brand.copyright}</span>}
+            {badge && (
+              <a href="https://sepetak.com/?ref=toko" target="_blank" rel="noopener" className="ps-footer-badge">
+                Dibuat dengan Sepetak
+              </a>
+            )}
+          </div>
         </div>
       )}
     </footer>
